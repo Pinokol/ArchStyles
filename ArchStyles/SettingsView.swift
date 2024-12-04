@@ -9,45 +9,61 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @State var isActive: Bool = false
-    @State var slideValue: Float = 0
-    @State var date: Date = Date()
-    @State var mode: Mode = .auto
+    @Environment(\.colorScheme) var colorScheme
+    
+    @Binding var titleOn: Bool
+    @Binding var rowHeight: Double
+    @Binding var cScheme: Int
+    
+    @State private var isSliding = false
     
     var body: some View {
         
         Form {
+            Section(header: Text("App Theme")) {
+                Text(colorScheme == .dark ? "Dark Theme enabled" : "Light Theme enabled")
+            }
             
             Section(header: Text("Text")) {
                 Text("Text component")
             }
             
-            Section(header: Text("title")) {
-                Toggle("Toogle status", isOn: $isActive)
-                
-                Text("Toggle is \(isActive ? "on" : "off")")
+            Section(header: Text("Info Title Visible")) {
+                Toggle("Show title list", isOn: $titleOn)
+                if titleOn {
+                    Text("Navigation title enabled")
+                }
             }
             
             Section(header: Text("Slider")) {
                 VStack{
-                    Slider(value: $slideValue, in: 0...100, step: 1)
-                    Text("\(Int(slideValue))")
+                    Slider(value: $rowHeight, in: 40...100, step: 1) { sliding in
+                        self.isSliding = sliding
+                    }
+                    Text(String(format: "Row height: %.1f", rowHeight))
                     
+                    if isSliding {
+                        InfoRow(post: postsBase.first!, rowHeight: $rowHeight)
+                    }
                 }
             }
             
-            Section(header: Text("Date Picker")) {
-                DatePicker("Select date", selection: $date)
-                    .datePickerStyle(GraphicalDatePickerStyle())
-            }
-            
             Section(header: Text("Picker")) {
-                Picker(selection: $mode) {
-                    ForEach(Mode.allCases, id: \.self) { mode in
-                        Text(mode.rawValue)
-                    }
+                Picker(selection: $cScheme) {
+                    Text("Light")
+                        .tag(0)
+                    Text("Dark")
+                        .tag(1)
+                    Text("Device defined")
+                        .tag(2)
                 } label: {
-                    Text(mode.rawValue)
+                    
+                    switch cScheme {
+                    case 0: Text("Light")
+                    case 1: Text("Dark")
+                    default: Text("Device defined")
+                    }
+                    
                 }
                 .pickerStyle(InlinePickerStyle())
                 .labelsHidden()
@@ -58,7 +74,7 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView()
+    SettingsView(titleOn: .constant(true), rowHeight: .constant(40), cScheme: .constant(2))
 }
 
 enum Mode: String, CaseIterable {
