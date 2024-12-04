@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct ArchStylesApp: App {
+    
+    @State var cScheme: Int = 2
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(cScheme: $cScheme)
+                .preferredColorScheme(cScheme > 1 ? nil : (cScheme == 0 ? .light : .dark))
         }
     }
 }
