@@ -20,9 +20,9 @@ struct ContentView: View {
                 .tabItem {
                     Label("List", systemImage: "info.bubble")
                 }
-            HelloView()
+            ArchQuizView()
                 .tabItem {
-                    Label("Hello" , systemImage: "figure")
+                    Label("ArchQuiz" , systemImage: "building.columns.fill")
                 }
             SettingsView(titleOn: $titleOn, rowHeight: $rowHeight, cScheme: $cScheme)
                 .tabItem {
