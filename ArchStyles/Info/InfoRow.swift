@@ -10,14 +10,16 @@ import SwiftUI
 struct InfoRow: View {
     
     let post: Post
+    @Binding var rowHeight: Double
     
     var body: some View {
         HStack() {
             post.image
                 .resizable()
-                .frame(width: 44, height: 44)
+                .frame(width: rowHeight, height: rowHeight)
                 .clipShape(Circle())
             Text(post.title)
+                .font(.system(size: rowHeight/2, weight: .semibold))
         }
     }
 }
